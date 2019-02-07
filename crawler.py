@@ -83,7 +83,7 @@ def crawl(url, workers=None, limit_to_domain=True, robot=False, single=False):
         # Print 
         [(lambda x: info("{} -> {}".format(result['parent'], x.url())))(r) for r in new_urls]
 
-        debug("URL stats: Total {} New {} Domain {}".format(len(result['urls']), len(new_urls), len(domain_urls)))
+        debug("URL stats: Total {} Domain {} New {}".format(len(result['urls']), len(domain_urls), len(new_urls)))
 
         for r in new_urls:
 
