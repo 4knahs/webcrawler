@@ -91,6 +91,8 @@ def crawl(url, workers=None, limit_to_domain=True, robot=False, single=False):
                 info("Blocked access to {}".format(r.url()))
                 continue 
 
+            print(r.url())
+
             if not single:
                 debug('Scheduling: {}'.format(r.url()))
 
