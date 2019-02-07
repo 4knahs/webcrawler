@@ -74,6 +74,14 @@ E.g., how to run with robots.txt support:
 python crawler.py <url> -r
 ```
 
+Additionally, to allow only one depth of url crawling:
+
+```
+python crawler.py <url> -r -s
+```
+
+
+
 ## Testing
 
 This project includes a set of tests to validate potential URLs, check `test_crawler.py`
