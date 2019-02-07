@@ -92,3 +92,7 @@ To run the tests:
 ```
 python test_crawler.py
 ```
+
+## Happy crawling
+
+![The crawler](https://media.giphy.com/media/8TweT7thDuT6ybPL9L/giphy.gif "The crawler")
