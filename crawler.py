@@ -2,7 +2,7 @@ import multiprocessing
 from consumer import Consumer
 from crawler_task import CrawlerTask
 from url import Url
-from logger import warn, info, debug, error, set_verbose, logger_to_stdout
+from logger import warn, info, debug, error, set_verbose, logger_to_stdout, set_silent
 import sys
 import argparse
 from robot import Robot
@@ -118,19 +118,23 @@ def crawl(url, workers=None, limit_to_domain=True, robot=False, single=False):
 def main():
     # Handle command line inputs
     parser = argparse.ArgumentParser(description="Crawls webpages for URLs")
-    parser.add_argument('-w', type=int, help='Number of processes (default: 2 * cpu_count())')
-    parser.add_argument('-l', dest='domain', action='store_true', help='If set crawls only domain specific URLs')
-    parser.add_argument('url', help='URL to crawl')
-    parser.add_argument('-v', help='Enable verbose', dest='verbose', action='store_true')
+    parser.add_argument('-w', type=int, help='Number of processes (default: 2 * cpu_count()).')
+    parser.add_argument('-l', dest='domain', action='store_true', help='If set crawls only domain specific URLs.')
+    parser.add_argument('url', help='URL to crawl.')
+    parser.add_argument('-v', help='Enable verbose.', dest='verbose', action='store_true')
     parser.add_argument('-r', help='Enable robots.txt url blocking and throttling. Superseedes -w and forces workers to 1.', dest='robot', action='store_true')
-    parser.add_argument('-s', help='Single depth url crawl', dest='single', action='store_true')
-    parser.set_defaults(limit=False, robot=False, domain=False, single=False)
+    parser.add_argument('-sd', help='Single depth url crawl.', dest='single', action='store_true')
+    parser.add_argument('-s', help='Silent. Superseedes -v and disables logging.', dest='silent', action='store_true')
+    parser.set_defaults(limit=False, robot=False, domain=False, single=False, silent=False)
     args = parser.parse_args()
 
     logger_to_stdout()
 
     if args.verbose:
         set_verbose()
+
+    if args.silent:
+        set_silent()
 
     if args.w:
         # TODO: do proper conversion check for the workers input

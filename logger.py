@@ -27,3 +27,6 @@ def logger_to_stdout():
 
 def set_verbose():
     logger.setLevel(logging.DEBUG)
+
+def set_silent():
+    logger.setLevel(logging.CRITICAL)
