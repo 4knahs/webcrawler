@@ -105,7 +105,6 @@ def main():
     parser.add_argument('-l', dest='domain', action='store_true', help='If set crawls only domain specific URLs')
     parser.add_argument('url', help='URL to crawl')
     parser.add_argument('-v', help='Enable verbose', dest='verbose', action='store_true')
-    parser.add_argument('-r', help='Enable robots.txt limits', dest='robot', action='store_true')
     parser.set_defaults(limit=False)
     args = parser.parse_args()
 
