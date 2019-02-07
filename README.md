@@ -25,9 +25,10 @@ This project was tested with Python 3.5.
 
 To install the dependencies:
 
-```
-pip install tldextract
-pip install beautifulsoup4
+```bash
+pip install tldextract # proper url suffix handling
+pip install beautifulsoup4 # xml/html parsing
+pip install robotexclusionrulesparser # Proper robot.txt support
 ```
 
 ## How to run
@@ -65,7 +66,7 @@ optional arguments:
 
 ## Respecting robots.txt
 
-To execute with robots.txt support use the -r parameter. Note that for now this forces
+To execute with robots.txt support use the `-r` parameter. Note that for now this forces
 single process processing to account for robots.txt based throttling.
 
 E.g., how to run with robots.txt support:
