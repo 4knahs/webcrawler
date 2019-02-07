@@ -26,6 +26,10 @@ def is_new_url(url):
         site_tree[url] += 1
         return False
 
+def print_url(url):
+    if url != '' and not url.startswith('javascript'):
+        print(url)
+
 def crawl(url, workers=None, limit_to_domain=True, robot=False, single=False):
     """Crawls a given url to determine its link tree.
     
@@ -91,7 +95,7 @@ def crawl(url, workers=None, limit_to_domain=True, robot=False, single=False):
                 info("Blocked access to {}".format(r.url()))
                 continue 
 
-            print(r.url())
+            print_url(r.url())
 
             if not single:
                 debug('Scheduling: {}'.format(r.url()))
