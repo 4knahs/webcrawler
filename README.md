@@ -46,7 +46,7 @@ For limiting the crawl domain to the domain of the provided URL use the `-l` opt
 For further commands check the `--help` option:
 
 ```
-$ python3 crawler.py monzo.com -h
+$ python3 crawler.py -h
 usage: crawler.py [-h] [-w W] [-l] [-v] [-r] [-sd] [-s] url
 
 Crawls webpages for URLs
