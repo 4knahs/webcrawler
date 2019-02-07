@@ -2,9 +2,22 @@ import unittest
 from crawler_task import CrawlerTask
 from url import Url
 #import pdb
+from robot import Robot
 
 class TestCrawler(unittest.TestCase):
 
+    def test_robot(self):
+        # TODO: these aren't proper tests as both the robot.txt and the urls might change in the future
+
+        # Site with no robots.txt
+        r = Robot("http://abola.pt")
+        self.assertEqual(r.should_block(Url("https://abola.pt/Clubes/Noticias/Ver/772433/40/")), False)
+
+        # Site with few robots.txt
+        r = Robot("http://monzo.com")
+        self.assertEqual(r.should_block(Url("https://monzo.com/")), False)
+        self.assertEqual(r.should_block(Url("https://monzo.com/blog/")), False)
+        self.assertEqual(r.should_block(Url("https://monzo.com/docs/")), True)
     
     def test_url_protocol_parsing(self):
         

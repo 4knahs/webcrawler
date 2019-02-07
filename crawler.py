@@ -5,6 +5,8 @@ from url import Url
 from logger import warn, info, debug, error, set_verbose, logger_to_stdout
 import sys
 import argparse
+from robot import Robot
+from time import sleep
 
 site_tree = {}
 
@@ -24,7 +26,7 @@ def is_new_url(url):
         site_tree[url] += 1
         return False
 
-def crawl(url, workers=None, limit_to_domain=True):
+def crawl(url, workers=None, limit_to_domain=True, robot=False, single=False):
     """Crawls a given url to determine its link tree.
     
     Keyword arguments:
@@ -40,7 +42,10 @@ def crawl(url, workers=None, limit_to_domain=True):
     results = multiprocessing.Queue()
     
     # Start consumers
-    if workers:
+    if robot:
+        rob = Robot(u.url())
+        num_consumers = 1
+    elif workers:
         num_consumers = workers
     else:
         num_consumers = multiprocessing.cpu_count() * 2
@@ -76,14 +81,26 @@ def crawl(url, workers=None, limit_to_domain=True):
         new_urls = list(filter(lambda x: is_new_url(x.url()), domain_urls))
 
         # Print 
-        [(lambda x: info("{} -> {}".format(result['parent'], x.url())))(r) for r in domain_urls]
+        [(lambda x: info("{} -> {}".format(result['parent'], x.url())))(r) for r in new_urls]
 
         debug("URL stats: Total {} New {} Domain {}".format(len(result['urls']), len(new_urls), len(domain_urls)))
 
         for r in new_urls:
-            debug('Scheduling: {}'.format(r.url()))
-            tasks.put(CrawlerTask(r.url()))
-            num_jobs += 1
+
+            if robot and rob.should_block(r):
+                info("Blocked access to {}".format(r.url()))
+                continue 
+
+            if not single:
+                debug('Scheduling: {}'.format(r.url()))
+
+                tasks.put(CrawlerTask(r.url()))
+                
+                if robot and rob.throttle_time():
+                    info('Sleeping {} seconds'.format(rob.throttle_time()))
+                    sleep(rob.throttle_time())
+
+                num_jobs += 1
 
         num_jobs -= 1
 
@@ -101,11 +118,13 @@ def crawl(url, workers=None, limit_to_domain=True):
 def main():
     # Handle command line inputs
     parser = argparse.ArgumentParser(description="Crawls webpages for URLs")
-    parser.add_argument('-w', help='Number of processes (default: 2 * cpu_count())')
+    parser.add_argument('-w', type=int, help='Number of processes (default: 2 * cpu_count())')
     parser.add_argument('-l', dest='domain', action='store_true', help='If set crawls only domain specific URLs')
     parser.add_argument('url', help='URL to crawl')
     parser.add_argument('-v', help='Enable verbose', dest='verbose', action='store_true')
-    parser.set_defaults(limit=False)
+    parser.add_argument('-r', help='Enable robots.txt url blocking and throttling. Superseedes -w and forces workers to 1.', dest='robot', action='store_true')
+    parser.add_argument('-s', help='Single depth url crawl', dest='single', action='store_true')
+    parser.set_defaults(limit=False, robot=False, domain=False, single=False)
     args = parser.parse_args()
 
     logger_to_stdout()
@@ -115,9 +134,9 @@ def main():
 
     if args.w:
         # TODO: do proper conversion check for the workers input
-        crawl(args.url, workers=int(args.w), limit_to_domain=args.domain)
+        crawl(args.url, workers=args.w, limit_to_domain=args.domain, robot=args.robot, single=args.single)
     else:
-        crawl(args.url, limit_to_domain=args.domain)
+        crawl(args.url, limit_to_domain=args.domain, robot=args.robot, single=args.single)
 
 
 if __name__ == '__main__':
