@@ -8,6 +8,7 @@ import argparse
 
 site_tree = {}
 
+# For long running crawls might be beneficial to store hashed values in terms of memory
 def is_new_url(url):
     """Returns true if its a new URL.
 
@@ -79,7 +80,7 @@ def crawl(url, workers=None, limit_to_domain=True):
 
         debug("URL stats: Total {} New {} Domain {}".format(len(result['urls']), len(new_urls), len(domain_urls)))
 
-        for r in domain_urls:
+        for r in new_urls:
             debug('Scheduling: {}'.format(r.url()))
             tasks.put(CrawlerTask(r.url()))
             num_jobs += 1
@@ -104,6 +105,7 @@ def main():
     parser.add_argument('-l', dest='domain', action='store_true', help='If set crawls only domain specific URLs')
     parser.add_argument('url', help='URL to crawl')
     parser.add_argument('-v', help='Enable verbose', dest='verbose', action='store_true')
+    parser.add_argument('-r', help='Enable robots.txt limits', dest='robot', action='store_true')
     parser.set_defaults(limit=False)
     args = parser.parse_args()
 
