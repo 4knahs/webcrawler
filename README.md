@@ -46,7 +46,7 @@ For further commands check the `--help` option:
 
 ```
 $ python3 crawler.py -h
-usage: crawler.py [-h] [-w W] [-l] [-v] url
+usage: crawler.py [-h] [-w W] [-l] [-v] [-r] [-s] url
 
 Crawls webpages for URLs
 
@@ -58,6 +58,20 @@ optional arguments:
   -w W        Number of processes (default: 2 * cpu_count())
   -l          If set crawls only domain specific URLs
   -v          Enable verbose
+  -r          Enable robots.txt url blocking and throttling. Superseedes -w
+              and forces workers to 1.
+  -s          Single depth url crawl
+```
+
+## Respecting robots.txt
+
+To execute with robots.txt support use the -r parameter. Note that for now this forces
+single process processing to account for robots.txt based throttling.
+
+E.g., how to run with robots.txt support:
+
+```
+python crawler.py <url> -r
 ```
 
 ## Testing
