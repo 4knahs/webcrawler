@@ -7,7 +7,7 @@ Python app to crawl websites.
 I decided to implement a producer/consumer model:
 
 * The producer has a task queue where only new urls are queued.
-* Consumers fetch a task consisting of an url, and reply with a list of its inner urls.
+* Consumers fetch a task consisting of an url, and replies with a list of its inner urls.
 * The producer is constantly waiting on new replies, it does not wait for all consumers to be done.
 * When it receives a reply it filters known urls and adds the new ones to the task queue.
 * The producer signals for the termination of all consumers when there are no more urls to process.
@@ -18,6 +18,7 @@ I decided to use processes for true parallelism.
 
 For further optimizations one could profile the observed workload and task execution time
 and potentially batch tasks to reduce inter-process communication and the queue lock acquisition time.
+For a system with reduced synchronization it would be better to implement bloom filters to detect already visited pages.
 
 ## Compatibility and dependencies
 
