@@ -18,7 +18,7 @@ I decided to use processes for true parallelism.
 
 For further optimizations one could profile the observed workload and task execution time
 and potentially batch tasks to reduce inter-process communication and the queue lock acquisition time.
-For a system with reduced synchronization it would be better to implement bloom filters to detect already visited pages.
+Note that for a highly scalable system you would likely need to reduce synchronization, e.g., by implement bloom filters to detect already visited pages.
 
 ## Compatibility and dependencies
 
